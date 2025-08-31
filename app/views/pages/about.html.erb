@@ -1,15 +1,42 @@
-<h1 class="h3 mb-3">about this project</h1>
-<p>this app collects brewery data and links it to countries. it demonstrates data import, associations, search, pagination, and basic maps.</p>
+cat > app/views/pages/about.html.erb <<'ERB'
+<%# all comments are lowercase %>
 
-<h2 class="h5 mt-4">data sources</h2>
+<h1 class="h3 mb-3">about this project</h1>
+
+<p>this app uses real datasets and a fallback generator to demonstrate data collection, storage, associations, search, filtering, pagination, navigation, and simple maps.</p>
+
+<h2 class="h5 mt-4">datasets</h2>
 <ul>
-  <li>rest countries api for country data at runtime or faker fallback</li>
-  <li>open brewery db api for brewery data at runtime or faker fallback</li>
-  <li>faker gem for supplemental seed data</li>
+  <li><strong>rest countries api</strong>: country metadata (name, cca2 code, region, capital, latlng, population, area). used to populate the countries table.</li>
+  <li><strong>open brewery db api</strong>: brewery metadata (name, brewery_type, address, city, state, postal_code, latitude, longitude, website_url, phone, country). used to populate the breweries table, linked to countries.</li>
+  <li><strong>faker gem</strong>: fallback generator when apis are unavailable or slow, to ensure enough rows for marking.</li>
+</ul>
+<h2 class="h5 mt-4">database structure</h2>
+<ul>
+  <li>countries(id, name, code, region, capital, population, area, lat, lng, timestamps)</li>
+  <li>breweries(id, name, brewery_type, street, city, state, postal_code, website_url, phone, latitude, longitude, external_id, country_id, timestamps)</li>
+  <li>tags(id, name, timestamps)</li>
+  <li>brewery_tags(id, brewery_id, tag_id, timestamps)</li>
 </ul>
 
-<h2 class="h5 mt-4">erd (text)</h2>
+<h2 class="h5 mt-4">erd (text diagram)</h2>
 <pre>
-country (1) --- (many) brewery
+country (1) -------- (many) brewery
 brewery (many) --- (many) tag through brewery_tag
 </pre>
+<h2 class="h5 mt-4">integration plan</h2>
+<ol>
+  <li>seed countries from rest countries api; store name, two-letter code, and lat/lng for mapping.</li>
+  <li>seed breweries from open brewery db; match to countries by name or two-letter code; assign country_id.</li>
+  <li>derive tags from distinct brewery_type values and populate brewery_tags for the many-to-many link.</li>
+  <li>if an api fails, the seed script generates realistic rows with faker while keeping associations valid.</li>
+</ol>
+
+<h2 class="h5 mt-4">what to demo</h2>
+<ol>
+  <li>navigation menu on all pages</li>
+  <li>breweries index with search, country filter, and pagination</li>
+  <li>brewery show with conditional fields (website and phone only if present) and a map if coordinates exist</li>
+  <li>countries index and country show with stats, map, and a paginated list of breweries</li>
+  <li>tags index and tag show with pagination</li>
+</ol>
