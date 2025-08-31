@@ -1,0 +1,24 @@
+<h1 class="h3 mb-3"><%= @tag.name %></h1>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>city</th>
+        <th>country</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @breweries.each do |b| %>
+        <tr>
+          <td><%= link_to b.name, b %></td>
+          <td><%= b.city %></td>
+          <td><%= link_to b.country.name, b.country %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="my-3">
+  <%= paginate @breweries %>
+</div>

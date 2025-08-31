@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="col-lg-8">
+    <h1 class="h3 mb-3"><%= @brewery.name %></h1>
+
+    <dl class="row">
+      <dt class="col-sm-3">type</dt>
+      <dd class="col-sm-9"><%= @brewery.brewery_type %></dd>
+
+      <dt class="col-sm-3">address</dt>
+      <dd class="col-sm-9">
+        <%= [@brewery.street, @brewery.city, @brewery.state, @brewery.postal_code].compact_blank.join(", ") %>
+      </dd>
+
+      <dt class="col-sm-3">country</dt>
+      <dd class="col-sm-9"><%= link_to @brewery.country.name, @brewery.country %></dd>
+
+      <% if @brewery.website_url.present? %>
+        <dt class="col-sm-3">website</dt>
+        <dd class="col-sm-9"><%= link_to @brewery.website_url, @brewery.website_url, target: "_blank", rel: "noopener" %></dd>
+      <% end %>
+
+      <% if @brewery.phone.present? %>
+        <dt class="col-sm-3">phone</dt>
+        <dd class="col-sm-9"><%= @brewery.phone %></dd>
+      <% end %>
+    </dl>
+
+    <% if @brewery.tags.any? %>
+      <p>tags:
+        <% @brewery.tags.each do |t| %>
+          <%= link_to t.name, t, class: "badge text-bg-secondary me-1" %>
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <div class="col-lg-4">
+    <% if @brewery.latitude.present? && @brewery.longitude.present? %>
+      <div id="map"></div>
+      <% content_for :page_js do %>
+        <script>
+          const map = L.map('map').setView([<%= @brewery.latitude %>, <%= @brewery.longitude %>], 12);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; openstreetmap contributors'
+          }).addTo(map);
+          L.marker([<%= @brewery.latitude %>, <%= @brewery.longitude %>]).addTo(map).bindPopup('<%= j @brewery.name %>');
+        </script>
+      <% end %>
+    <% end %>
+  </div>
+</div>

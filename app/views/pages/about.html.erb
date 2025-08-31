@@ -1,0 +1,15 @@
+<h1 class="h3 mb-3">about this project</h1>
+<p>this app collects brewery data and links it to countries. it demonstrates data import, associations, search, pagination, and basic maps.</p>
+
+<h2 class="h5 mt-4">data sources</h2>
+<ul>
+  <li>rest countries api for country data at runtime or faker fallback</li>
+  <li>open brewery db api for brewery data at runtime or faker fallback</li>
+  <li>faker gem for supplemental seed data</li>
+</ul>
+
+<h2 class="h5 mt-4">erd (text)</h2>
+<pre>
+country (1) --- (many) brewery
+brewery (many) --- (many) tag through brewery_tag
+</pre>

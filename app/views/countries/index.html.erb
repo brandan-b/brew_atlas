@@ -1,0 +1,28 @@
+<h1 class="h3 mb-3">countries</h1>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>code</th>
+        <th>region</th>
+        <th>capital</th>
+        <th>breweries</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @countries.each do |c| %>
+        <tr>
+          <td><%= link_to c.name, c %></td>
+          <td><%= c.code %></td>
+          <td><%= c.region %></td>
+          <td><%= c.capital %></td>
+          <td><%= c.attributes["breweries_count"] || c.breweries.size %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="my-3">
+  <%= paginate @countries %>
+</div>

@@ -1,0 +1,56 @@
+<h1 class="h3 mb-3"><%= @country.name %> (<%= @country.code %>)</h1>
+<div class="row">
+  <div class="col-md-6">
+    <dl class="row">
+      <dt class="col-sm-4">region</dt>
+      <dd class="col-sm-8"><%= @country.region %></dd>
+      <dt class="col-sm-4">capital</dt>
+      <dd class="col-sm-8"><%= @country.capital %></dd>
+      <dt class="col-sm-4">population</dt>
+      <dd class="col-sm-8"><%= number_with_delimiter(@country.population) %></dd>
+      <dt class="col-sm-4">area</dt>
+      <dd class="col-sm-8"><%= @country.area %> km²</dd>
+    </dl>
+  </div>
+  <div class="col-md-6">
+    <% if @country.lat.present() && @country.lng.present() %>
+      <div id="map"></div>
+      <% content_for :page_js do %>
+        <script>
+          const map = L.map('map').setView([<%= @country.lat %>, <%= @country.lng %>], 4);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; openstreetmap contributors' }).addTo(map);
+          <% @country.breweries.limit(100).each do |b| %>
+            <% if b.latitude.present? && b.longitude.present? %>
+              L.marker([<%= b.latitude %>, <%= b.longitude %>]).addTo(map).bindPopup('<%= j b.name %>');
+            <% end %>
+          <% end %>
+        </script>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<h2 class="h5 mt-4">breweries in <%= @country.name %></h2>
+<div class="table-responsive">
+  <table class="table table-striped align-middle">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>city</th>
+        <th>type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @breweries.each do |b| %>
+        <tr>
+          <td><%= link_to b.name, b %></td>
+          <td><%= b.city %></td>
+          <td><%= b.brewery_type %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="my-3">
+  <%= paginate @breweries %>
+</div>
